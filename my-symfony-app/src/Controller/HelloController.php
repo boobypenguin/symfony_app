@@ -1,8 +1,10 @@
 <?php
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HelloController extends AbstractController
@@ -10,17 +12,13 @@ class HelloController extends AbstractController
     /**
      * @Route("/hello", name="hello")
      */
-    public function index()
+    public function index(Request $request, LoggerInterface $logger)
     {
-        $result = '<html><body>';
-        $result .= '<h1>Subscribed Services</h1>';
-        $result .= '<ol>';
-        $arr = $this->getSubscribedServices();
-        foreach ($arr as $key => $value) {
-            $result .= '<li>' . $key . '</li>';
-        }
-        $result .= '</ol>';
-        $result .= '</body></html>';
-        return new Response($result);
+        $data = array(
+            'name' => array('first' => 'Taro', 'second' => 'Yamada'),
+            'age' => 36, 'mail' => 'taro@yamada.kun',
+        );
+        $logger->info(serialize($data));
+        return new JsonResponse($data);
     }
 }
