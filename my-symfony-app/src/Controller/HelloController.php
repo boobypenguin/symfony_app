@@ -3,8 +3,6 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,29 +23,13 @@ class HelloController extends AbstractController
     }
 
     /**
-     * @Route("/find", name="find")
+     * @Route("/find/{id}", name="find")
      */
-    public function find(Request $request)
+    public function find(Request $request, Person $person)
     {
-        $formobj = new FindForm();
-        $form = $this->createFormBuilder($formobj)
-            ->add('find', TextType::class)
-            ->add('save', SubmitType::class, array('label' => 'Click'))
-            ->getForm();
-
-        if ($request->getMethod() == 'POST') {
-            $form->handleRequest($request);
-            $findstr = $form->getData()->getFind();
-            $repository = $this->getDoctrine()
-                ->getRepository(Person::class);
-            $result = $repository->find($findstr);
-        } else {
-            $result = null;
-        }
         return $this->render('hello/find.html.twig', [
             'title' => 'Hello',
-            'form' => $form->createView(),
-            'data' => $result,
+            'data' => $person,
         ]);
     }
 
